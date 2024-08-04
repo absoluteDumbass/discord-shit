@@ -1,0 +1,58 @@
+@font-face { font-family: Mario; src: url('marioFont.ttf'); } 
+
+.canvas-body {
+    position:absolute; 
+    top: 0; 
+    right: 0;
+}
+
+#ui {
+    padding-top: 5px;
+    text-align: center;
+    width: 52vw;
+    height: 68vh;
+    background: #999;
+}
+
+body {
+    overflow: hidden;
+    font-family: Mario;
+    background: #BBB;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
+
+p {
+    margin-top: 10px;
+    font-size: 1em;
+    text-shadow: -1px 1px 0 #FFF,
+                1px 1px 0 #FFF,
+                1px -1px 0 #FFF,
+                -1px -1px 0 #FFF;
+}
+
+button {
+    margin-top: 10px;
+    font-size: 1em;
+    font-family: Mario;
+    text-shadow: -1px 1px 0 #FFF,
+                1px 1px 0 #FFF,
+                1px -1px 0 #FFF,
+                -1px -1px 0 #FFF;
+}
+
+.fat {
+    font-size: 2.5em;
+    text-shadow: -2px 2px 0 #FFF,
+                2px 2px 0 #FFF,
+                2px -2px 0 #FFF,
+                -2px -2px 0 #FFF;
+    margin: 0;
+}
+
+#avatar {
+    position: absolute;
+    left: 40vw;
+    border: 5px solid #AAA;
+}
