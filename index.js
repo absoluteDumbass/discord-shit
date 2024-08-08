@@ -52,7 +52,7 @@ app.get('/callback',
 
 app.get('/profile', (req, res) => {
     //if (!req.isAuthenticated() || !req.user) return res.redirect('/login');
-    if (typeof req.user == "undefined") res.redirect('/');
+    if (!req.user) res.redirect('/');
 	mee6.getUserXp("522561390330904585", req.user.id).then(user => {
         getColorFromURL(user.avatarUrl)
             .then(color => {
@@ -143,6 +143,7 @@ io.on('connection', (socket) => {
         })
         console.log(`[ANNEX] ${user.username} annexed ${selected.length} provinces`);
         io.emit('mapUpdate', grid);
+        socket.emit('userData', {user, colors, grid});
     })
 
     socket.on('disconnect', () => {
