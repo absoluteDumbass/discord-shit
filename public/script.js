@@ -77,6 +77,10 @@ socket.on('userData', (syncData) => {
     loaded = true;
 });
 
+socket.on('mapUpdate', (data) => {
+    grid = data;
+})
+
 function setup() {
     let canvas = createCanvas(windowHeight, windowHeight);
     canvas.parent('canvas');

@@ -56,7 +56,7 @@ app.get('/profile', (req, res) => {
 	mee6.getUserXp("522561390330904585", req.user.id).then(user => {
         getColorFromURL(user.avatarUrl)
             .then(color => {
-                console.log(`Primary of ${user.id} is ${color.join(',')}`);
+                console.log(`[COLOR] ${user.id} is rgb(${color.join(',')})`);
                 // Store the dominant color in your server or database
                 colors[user.id] = `rgb(${color.join(", ")})`;
                 user.pp = user.level;
@@ -142,7 +142,7 @@ io.on('connection', (socket) => {
             user.pp -= 2;
         })
         console.log(`[ANNEX] ${user.username} annexed ${selected.length} provinces`);
-        io.emit('userData', {user, colors, grid});
+        io.emit('mapUpdate', grid);
     })
 
     socket.on('disconnect', () => {
