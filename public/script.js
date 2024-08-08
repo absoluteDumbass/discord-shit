@@ -78,7 +78,8 @@ socket.on('userData', (syncData) => {
 });
 
 socket.on('mapUpdate', (data) => {
-    grid = data;
+    grid = data.grid;
+    color = data.colors;
 })
 
 function setup() {

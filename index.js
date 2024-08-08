@@ -142,7 +142,7 @@ io.on('connection', (socket) => {
             user.pp -= 2;
         })
         console.log(`[ANNEX] ${user.username} annexed ${selected.length} provinces`);
-        io.emit('mapUpdate', grid);
+        io.emit('mapUpdate', {grid, colors});
         socket.emit('userData', {user, colors, grid});
     })
 
