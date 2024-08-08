@@ -118,9 +118,9 @@ io.use((socket, next) => {
 });
 
 io.on('connection', (socket) => {
-    const user = userList[socket.request.user.id];
 
     socket.on('requestUserData', () => {
+        const user = userList[socket.request.user.id];
         if (typeof user == "undefined") {
             console.log("someone was bugged idk who")
             socket.emit("loginAgain");
@@ -131,6 +131,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('annex', (selected) => {
+        const user = userList[socket.request.user.id];
         if (selected.length*2 > user.pp) return;
         selected.forEach((index) => {
             const sx = Math.floor(index/20);
@@ -145,10 +146,10 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
-        console.log('[LEAVE] user disconnected :(');
+        console.log(`[LEAVE] soemone left :(`);
     });
 });
 
 server.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+    console.log('Server is running on port 3000');
 });
