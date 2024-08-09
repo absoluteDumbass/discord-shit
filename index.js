@@ -60,7 +60,7 @@ app.get('/profile', (req, res) => {
                 console.log(`[COLOR] ${user.id} is rgb(${color.join(',')})`);
                 // Store the dominant color in your server or database
                 colors[user.id] = `rgb(${color.join(", ")})`;
-                user.pp = user.level;
+                user.pp = 99999999//user.level;
                 userList[req.user.id] = user;
                 res.sendFile(path.join(__dirname, 'public', 'index.html'));
             })
