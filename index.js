@@ -1,4 +1,5 @@
 const express = require('express');
+const os = require('os');
 const http = require('http');
 const socketIo = require('socket.io');
 const passport = require('passport');
@@ -151,6 +152,19 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(3000, () => {
-    console.log('Server is running on port 3000');
+function serverIP() {
+    const interfaces = os.networkInterfaces();
+    for (const name of Object.keys(interfaces)) {
+        for (const net of interfaces[name]) {
+            // Skip over non-IPv4 addresses and internal (127.0.0.1) addresses
+            if (net.family === 'IPv4' && !net.internal) {
+                return net.address;
+            }
+        }
+    }
+};
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`Server is running on ${serverIP()}:${PORT}`);
 });
