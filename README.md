@@ -5,7 +5,7 @@ The main premise (above the gameplay) is actually about a game where people with
 Me and the WorldBox server uses [MEE6](https://mee6.xyz/en/) to manage and get levels of the members.
 
 # Gameplay
-If you see this, then the website is still in an Alpha stage where the development is focused on functionalities and behind the scene stuff.
+If you see this, then the website is still in an Alpha stage where the development is focused on behind the scene stuff.
 
 ### You currently can only:
 - Select and deselect provinces
