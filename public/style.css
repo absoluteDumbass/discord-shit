@@ -1,8 +1,11 @@
 @font-face { font-family: Mario; src: url('marioFont.ttf'); } 
 
 :root {
-    --fat-font-size: 2.5em;
-    --def-font-size: 1em;
+    --fat-font-size: 2em;
+    --def-font-size: 1.2em;
+    --border-size: 2px;
+    --inverted-border-size: -1px;
+    --border-color: #000;
 }
 
 .canvas-body {
@@ -12,52 +15,75 @@
 }
 
 #ui {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding-top: 5px;
     text-align: center;
-    width: 52vw;
-    height: 68vh;
-    background: #999;
+    width: 50vw;
+    height: 72vh;
+    background: #8A8;
 }
 
 body {
     overflow: hidden;
     font-family: Mario;
-    background: #BBB;
+    background: #ACA;
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
 }
 
 p {
-    margin-top: 10px;
+    color: white;
+    margin: 8px;
     font-size: var(--def-font-size);
-    text-shadow: -1px 1px 0 #FFF,
-                1px 1px 0 #FFF,
-                1px -1px 0 #FFF,
-                -1px -1px 0 #FFF;
+    text-shadow: var(--inverted-border-size) var(--border-size) 0 var(--border-color),
+                var(--border-size) var(--border-size) 0 var(--border-color),
+                var(--border-size) var(--inverted-border-size) 0 var(--border-color),
+                var(--inverted-border-size) var(--inverted-border-size) 0 var(--border-color);
 }
 
 button {
-    margin-top: 10px;
+    display: block;
+    color: white;
+    margin: 5px;
     font-size: 1em;
     font-family: Mario;
-    text-shadow: -1px 1px 0 #FFF,
-                1px 1px 0 #FFF,
-                1px -1px 0 #FFF,
-                -1px -1px 0 #FFF;
+    text-shadow: var(--inverted-border-size) var(--border-size) 0 var(--border-color),
+                var(--border-size) var(--border-size) 0 var(--border-color),
+                var(--border-size) var(--inverted-border-size) 0 var(--border-color),
+                var(--inverted-border-size) var(--inverted-border-size) 0 var(--border-color);
 }
 
 .fat {
     font-size: var(--fat-font-size);
-    text-shadow: -2px 2px 0 #FFF,
-                2px 2px 0 #FFF,
-                2px -2px 0 #FFF,
-                -2px -2px 0 #FFF;
+    /* text-shadow: var(--inverted-border-size) var(--border-size) 0 var(--border-color),
+                var(--border-size) var(--border-size) 0 var(--border-color),
+                var(--border-size) var(--inverted-border-size) 0 var(--border-color),
+                var(--inverted-border-size) var(--inverted-border-size) 0 var(--border-color);*/
     margin: 0;
+}
+
+.capitalized {
+    color: black;
+    text-shadow: 
+    1px 1px 0 #FFF,
+    -1px 1px 0 #FFF,
+    1px -1px 0 #FFF,
+    -1px -1px 0 #FFF;
+}
+
+.combined {
+    text-shadow: 
+    2px 2px 0 #FFF,
+    -2px 2px 0 #FFF,
+    2px -2px 0 #FFF,
+    -2px -2px 0 #FFF;
 }
 
 #avatar {
     position: absolute;
     left: 40vw;
-    border: 5px solid #AAA;
+    border: 5px solid #8A8;
 }
