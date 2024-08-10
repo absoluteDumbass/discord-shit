@@ -19,7 +19,7 @@ const UImode = {
     <p>you can only ANNEX @1@ provinces</p>
     <button id="annex">ANNEX @hi this is a nice easter egg, please no hacking thanks@ province(s)</button>`,
     needpp: "<p>FAILED! you need @1@ more POLITICAL POWER!</p>",
-    annexed: "<p>you successfully ANNEXED @1@ provinces!</p>",
+    annexed: "<p>you successfully ANNEXED @1@ province(s)!</p>",
     notyours: "<p>unfortunately, you don't own all of the selected provinces.</p>",
     notconnected: "<p>please only select provinces that are next to eachother</p>",
     notfinished: `<p>PRETEND that this is a highly polished feature</p>
@@ -166,7 +166,7 @@ function draw() {
         for (let y = 0; y < 20; y++) {
             fill(color[grid[x][y].ownerID]);
             if (selected.includes((x*20+y))) {
-                fill(255);
+                fill("#33FF33");
             }
             square(x*s, y*s, s);
         }
