@@ -60,7 +60,7 @@ app.get('/profile', (req, res) => {
                 console.log(`[COLOR] ${user.id} is rgb(${color.join(',')})`);
                 // Store the dominant color in your server or database
                 colors[user.id] = `rgb(${color.join(", ")})`;
-                user.pp = 99999999//user.level;
+                user.pp = 999;
                 userList[req.user.id] = user;
                 res.sendFile(path.join(__dirname, 'public', 'index.html'));
             })
@@ -145,6 +145,14 @@ io.on('connection', (socket) => {
         console.log(`[ANNEX] ${user.username} annexed ${selected.length} provinces`);
         io.emit('mapUpdate', {grid, colors});
         socket.emit('userData', {user, colors, grid});
+    })
+
+    socket.on('inspect', (data) => {
+        const { sx, sy } = data;
+        const tile = grid[sx][sy];
+        const user = userList[tile.ownerID]
+
+        socket.emit('showInspect', {tile, user});
     })
 
     socket.on('disconnect', () => {

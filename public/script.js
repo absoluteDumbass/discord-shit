@@ -10,25 +10,42 @@ let maxVH = 0;
 // the UI im talking about is in the bottom left side of the screen
 const UImode = {
     empty: "",
+    default: `<p class="fat">what to do?</p>
+    <p>ONLY click these after you selected the province that you want</p>
+    <button id="inspect">inspect</button>
+    <button id="conquerUI">conquer</button>`,
     conquer: `<p class="fat">CONQUEST</p>
     <p>each provinces CONQUERED need 2 political power!</p>
-    <button id="annex">ANNEX @hi this is a nice easter egg, please no hacking thanks@ provinces</button>`,
+    <p>you can only ANNEX @1@ provinces</p>
+    <button id="annex">ANNEX @hi this is a nice easter egg, please no hacking thanks@ province(s)</button>`,
     needpp: "<p>FAILED! you need @1@ more POLITICAL POWER!</p>",
     annexed: "<p>you successfully ANNEXED @1@ provinces!</p>",
-    notyours: "<p>unfortunately, you don't own all of the selected provinces.</p>"
+    notyours: "<p>unfortunately, you don't own all of the selected provinces.</p>",
+    notconnected: "<p>please only select provinces that are next to eachother</p>",
+    notfinished: `<p>PRETEND that this is a highly polished feature</p>
+    <p>because i'm not DONE implementing yet</p>`,
+    comfirmdeselect: `<p class='fat'>are you sure</p>
+    <p>you can also deselect individual provinces by clicking on the same province</p>
+    <button id="deselect">YES, deselect everything.</button>
+    <button id="back">NO, go back!</button>`,
+    inspect: `<p>the province is owned by</p>
+    <p class="fat">@1@</p>
+    <p>he is currently LEVEL @2@ with:</p>
+    <p>@3@ POLITICAL POWER</p>`,
+    custom: `<p>@1@</p>
+    <button id="back">sure, okay.</button>`,
+    wait: `<p>WAIT FOR A MOMENT</p>`
 }
 UIdiv.addEventListener('click', (event) => {
   const isButton = event.target.nodeName === 'BUTTON';
   if (!isButton) {
-    UIset("empty", []);
-    selected = [];
+    if (selected.length) UIset("comfirmdeselect");
     return;
   }
 
   // button interections, event.target.id is the id of the button clicked
   switch (event.target.id) {
     case "annex":
-        if (selected.length == 0) return;
         if (selected.length*2 <= user.pp) {
             UIset("annexed", [selected.length]);
             socket.emit("annex", selected);
@@ -36,6 +53,37 @@ UIdiv.addEventListener('click', (event) => {
         } else {
             UIset("needpp", [selected.length*2-user.pp]);
         }
+        break;
+    case "inspect":
+        if (selected.length != 1) {
+            UIset("custom", ["please just select 1 province"]);
+            break;
+        }
+        const sx = Math.floor(selected[0]/20);
+        const sy = selected[0]%20;
+        const tile = grid[sx][sy];
+        if (tile.ownerID == "0") {
+            UIset("custom", ["sir, it's EMPTY"]);
+            break;
+        }
+        UIset("wait")
+        selected = [];
+        socket.emit("inspect", {sx,sy});
+        //UIset("inspect", ["your mom i think"])
+        break;
+    case "conquerUI":
+        if (selected.length == 0) {
+            UIset("custom", ["you need to select 1 or more provinces"]);
+            break;
+        }
+        UIset("conquer", [`${Math.floor(user.pp/2)}`, `${selected.length}`]);
+        break;
+    case "deselect":
+        UIset("empty");
+        selected = [];
+        break;
+    case "back":
+        UIset("default");
         break;
     default:
         console.log("Try changing the id in the switch statement too smh");
@@ -91,6 +139,10 @@ socket.on('mapUpdate', (data) => {
     color = data.colors;
 })
 
+socket.on('showInspect', (a) => {
+    UIset('inspect', [a.user.username, a.user.level, a.user.pp])
+})
+
 function setup() {
     let canvas = createCanvas(windowHeight, windowHeight);
     maxVH = windowHeight;
@@ -134,10 +186,11 @@ function mouseClicked() {
         selected.push(index);
     }
 
-    UIset("conquer", [`${selected.length}/${Math.floor(user.pp/2)}`]);
+    //UIset("conquer", [`${selected.length}/${Math.floor(user.pp/2)}`]);
+    UIset("default");
 }
 
-function UIset(mode, fillIn) {
+function UIset(mode, fillIn = []) {
     let base = UImode[mode].split("@");
 
     if (base.length == 1) {
