@@ -22,7 +22,7 @@
     padding-top: 30px;
     text-align: center;
     width: 50vw;
-    height: 72vh;
+    height: 60vh;
     background: #8A8A;
 }
 
@@ -98,8 +98,15 @@ button {
     font-size: 0.8em
 }
 
+#frog { /* mandatory frog */
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 128px;
+    height: 128px;
+}
+
 #avatar {
     position: absolute;
     left: 40vw;
-    border: 8px solid #8A8;
 }

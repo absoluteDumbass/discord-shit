@@ -54,7 +54,6 @@ app.get('/callback',
 
 app.get('/profile', (req, res) => {
     if (!req.isAuthenticated() || !req.user) res.redirect('/');
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 
 	mee6.getUserXp("522561390330904585", req.user.id).then(user => {
         getColorFromURL(user.avatarUrl)
@@ -64,6 +63,7 @@ app.get('/profile', (req, res) => {
                 colors[user.id] = `rgb(${color.join(", ")})`;
                 user.pp = userList[req.user.id] ? userList[req.user.id].pp : user.level;
                 userList[req.user.id] = user;
+                res.sendFile(path.join(__dirname, 'public', 'index.html'));
             })
             .catch(err => {
                 console.error('Error:', err);
@@ -77,9 +77,9 @@ const colors = {
 };
 let grid = [];
 
-for (let x = 0; x < 20; x++) {
+for (let x = 0; x < 50; x++) {
     grid.push([]);
-    for (let y = 0; y < 20; y++) {
+    for (let y = 0; y < 50; y++) {
         grid[x].push({
             ownerID: "0"
         })
@@ -104,8 +104,9 @@ io.on('connection', (socket) => {
 
     socket.on('requestUserData', () => {
         const user = userList[socket.request.user.id];
-        if (typeof user == "undefined") {
+        if (!user) {
             console.log("someone was bugged idk who")
+            console.log(userList)
             socket.emit("loginAgain");
             return;
         }
@@ -117,8 +118,8 @@ io.on('connection', (socket) => {
         const user = userList[socket.request.user.id];
         if (selected.length*2 > user.pp) return;
         selected.forEach((index) => {
-            const sx = Math.floor(index/20);
-            const sy = index%20;
+            const sx = Math.floor(index/50);
+            const sy = index%50;
 
             if (grid[sx][sy].ownerID == user.id) return;
             grid[sx][sy].ownerID = user.id;

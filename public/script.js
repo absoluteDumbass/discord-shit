@@ -79,8 +79,8 @@ UIdiv.addEventListener('click', (event) => {
             UIset("custom", ["please just select 1 province"]);
             break;
         }
-        const sx = Math.floor(selected[0]/20);
-        const sy = selected[0]%20;
+        const sx = Math.floor(selected[0]/50);
+        const sy = selected[0]%50;
         const tile = grid[sx][sy];
         selected = [];
         if (tile.ownerID == "0") {
@@ -121,15 +121,11 @@ socket.on("loginAgain", () => {
 })
 
 socket.on('userData', (syncData) => {
+    if (!window.location.href.indexOf("profile")) return;
     console.log(syncData);
     user = syncData.user;
     colors = syncData.colors;
     grid = syncData.grid;
-
-    if (user.length < 1) {
-        window.location.href = "/";
-        return;
-    }
 
     let rank = "the FORBIDDEN white role";
     const ranks = ["Grasshopper", "Butterfly", "Chicken", "Wolf", "Crocodile", "Bear", "Plague Doctor", "Druid", // low ranks 0-39
@@ -175,17 +171,19 @@ function windowResized() {
     return;
 }
 function draw() {
+    frameRate(1)
     background("#666666");
     fill(255)
     text("Pretty sure this is made for Landscape mode,", windowWidth, windowHeight/2-30);
     text("please turn your phone to sideway.", windowWidth, windowHeight/2);
     if (windowWidth < windowHeight) return;
     if (!loaded) return;
-    let s = windowHeight/20;
-    for (let x = 0; x < 20; x++) {
-        for (let y = 0; y < 20; y++) {
+    let s = windowHeight/50;
+    stroke('rgba(0, 0, 0, 0.25)');
+    for (let x = 0; x < 50; x++) {
+        for (let y = 0; y < 50; y++) {
             let c = color(colors[grid[x][y].ownerID]);
-            if (selected.includes((x*20+y))) c = selectedColor(c);
+            if (selected.includes((x*50+y))) c = selectedColor(c);
             fill(c);
             square(x*s, y*s, s);
         }
@@ -194,21 +192,30 @@ function draw() {
 
 function mouseClicked() {
     if (mouseX<0) return;
-    const clickedX = Math.floor(mouseX/windowHeight*20);
-    const clickedY = Math.floor(mouseY/windowHeight*20);
-    const index = clickedX*20+clickedY;
+    const clickedX = Math.floor(mouseX/windowHeight*50);
+    const clickedY = Math.floor(mouseY/windowHeight*50);
+    const index = clickedX*50+clickedY;
 
     const found = selected.indexOf(index);
     if (found > -1) {
         selected.splice(found, 1);
+        let s = windowHeight/50;
+        let c = color(colors[grid[clickedX][clickedY].ownerID]);
+        fill(c);
+        square(clickedX*s, clickedY*s, s);
     } else {
         selected.push(index);
+        let s = windowHeight/50;
+        let c = selectedColor(color(colors[grid[clickedX][clickedY].ownerID]));
+        fill(c);
+        square(clickedX*s, clickedY*s, s);
     }
 
     if (selected.length == 0) {
         UIset("mainmenu");
         return;
     }
+
     UIset("whattodo", [`${selected.length}`]);
 }
 
@@ -224,7 +231,7 @@ function UIset(mode, fillIn = []) {
         base[1+i*2] = fillIn[i];
     }
 
-    UIdiv.innerHTML = base.join("");
+    UIdiv.innerHTML = base.join("") + `<img id="frog" alt="frog" src="frog.png">`;
 }
 
 function mobileCheck() {
