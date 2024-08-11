@@ -71,7 +71,7 @@ UIdiv.addEventListener('click', (event) => {
             socket.emit("annex", selected);
             selected = [];
         } else {
-            UIset("custom", [`you need ${selected.length*2-user.pp} more political power to do that<br/>each provinces need 2 political power to conquer`]);
+            UIset("custom", [`you need ${selected.length*2-user.pp} more political power to do that<br/>each provinces need 1 political power to conquer`]);
         }
         break;
     case "inspect":

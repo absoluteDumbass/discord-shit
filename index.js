@@ -123,7 +123,7 @@ io.on('connection', (socket) => {
 
             if (grid[sx][sy].ownerID == user.id) return;
             grid[sx][sy].ownerID = user.id;
-            user.pp -= 2;
+            user.pp -= 1;
         });
         console.log(`[ANNEX] ${user.username} annexed ${selected.length} provinces`);
         io.emit('mapUpdate', {grid, colors});
