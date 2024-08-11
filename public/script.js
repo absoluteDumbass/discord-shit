@@ -23,8 +23,8 @@ const UImode = {
     <button>army</button>
     </div>
     </div>`,
-    patchnotes:`<div class="deep">
-    <p class="fat">patch notes</p>
+    patchnotes:`<p class="fat">patch notes</p>
+    <div class="deep small">
     <p>-fixed infinite political power glitch</p>
     <p>-increased the map by 625%</p>
     <p>-conquering cost reduced from 2 to 1</p>
