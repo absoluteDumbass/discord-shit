@@ -116,14 +116,14 @@ io.on('connection', (socket) => {
 
     socket.on('annex', (selected) => {
         const user = userList[socket.request.user.id];
-        if (selected.length*2 > user.pp) return;
+        if (selected.length > user.pp) return;
         selected.forEach((index) => {
             const sx = Math.floor(index/50);
             const sy = index%50;
 
             if (grid[sx][sy].ownerID == user.id) return;
             grid[sx][sy].ownerID = user.id;
-            user.pp -= 1;
+            user.pp--;
         });
         console.log(`[ANNEX] ${user.username} annexed ${selected.length} provinces`);
         io.emit('mapUpdate', {grid, colors});

@@ -14,34 +14,38 @@ const UImode = {
     <button>army</button>
     <button id="patchnotes">patch notes</button>
     <br/><br/>
-    <div id="deep">
+    <div class="deep">
     <p class="fat">map modes</p>
     <p>(oh these doesn't work yet)</p>
+    <div class="horizontal">
     <button>political</button>
     <button>development</button>
     <button>army</button>
+    </div>
     </div>`,
-    patchnotes:`<div id="deep">
+    patchnotes:`<div class="deep">
     <p class="fat">patch notes</p>
     <p>-fixed infinite political power glitch</p>
-    <p>-cooler look (we are now green)</p>
+    <p>-increased the map by 625%</p>
+    <p>-conquering cost reduced from 2 to 1</p>
+    <p>-cooler look (say hi to froggie)</p>
     <p>-added inspection</p>
     <p>-added army</p>
     </div>`,
-    whattodo: `<div id="deep">
+    whattodo: `<div class="deep">
     <p class="fat">what to do?</p>
     <p>only click these after you selected the province that you want</p>
     </div>
     <button id="inspect">inspect</button>
     <button id="annex">annex @hi this is a nice easter egg, please no hacking thanks@ province(s)</button>`,
-    comfirmdeselect: `<div id="deep">
+    comfirmdeselect: `<div class="deep">
     <p class='fat'>are you sure</p>
     <p>you can also deselect provinces by clicking on the same province</p>
     <p>this will take you to the main menu</p>
     </div>
     <button id="deselect">yes, deselect everything.</button>
     <button id="back">no, go back!</button>`,
-    inspect: `<div id="deep">
+    inspect: `<div class="deep">
     <p>the province is owned by</p>
     <p class="fat">@1@</p>
     <br/><br/>
@@ -66,12 +70,12 @@ UIdiv.addEventListener('click', (event) => {
   // button interections, event.target.id is the id of the button clicked
   switch (event.target.id) {
     case "annex":
-        if (selected.length*2 <= user.pp) {
+        if (selected.length <= user.pp) {
             UIset("custom", [`successfully annexed ${selected.length} provinces`]);
             socket.emit("annex", selected);
             selected = [];
         } else {
-            UIset("custom", [`you need ${selected.length*2-user.pp} more political power to do that<br/>each provinces need 1 political power to conquer`]);
+            UIset("custom", [`you need ${selected.length-user.pp} more political power to do that<br/>each provinces need 1 political power to conquer`]);
         }
         break;
     case "inspect":
@@ -117,11 +121,11 @@ socket.on('connect', () => {
 });
 
 socket.on("loginAgain", () => {
-    window.location.href = "/";
+    window.location.replace("/");
+    window.location.reload();
 })
 
 socket.on('userData', (syncData) => {
-    if (!window.location.href.indexOf("profile")) return;
     console.log(syncData);
     user = syncData.user;
     colors = syncData.colors;
