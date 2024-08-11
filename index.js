@@ -63,7 +63,7 @@ app.get('/profile', (req, res) => {
                 colors[user.id] = `rgb(${color.join(", ")})`;
                 user.pp = userList[req.user.id] ? userList[req.user.id].pp : user.level;
                 userList[req.user.id] = user;
-                res.sendFile(path.join(__dirname, 'public', 'index.html'));
+                res.sendFile(path.join(__dirname, 'troublemaker', 'index.html'));
             })
             .catch(err => {
                 console.error('Error:', err);
