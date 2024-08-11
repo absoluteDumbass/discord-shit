@@ -10,43 +10,56 @@ let colors = {};
 const UImode = {
     custom: `<p>@1@</p>
     <button id="back">okay</button>`, // use custom for short texts with no special buttons
-    mainmenu: `<p class="fat">MAP MODES</p>
+    mainmenu: `<p class="fat">oveview</p>
+    <button>army</button>
+    <button id="patchnotes">patch notes</button>
+    <br/><br/>
+    <div id="deep">
+    <p class="fat">map modes</p>
+    <p>(oh these doesn't work yet)</p>
     <button>political</button>
     <button>development</button>
     <button>army</button>
-    <hr/>
-    <p class="fat">THINGS THAT HAPPENED</p>
-    <p>to your beautiful nation</p>
-    <p>(insert NEWS here)</p>
-    <hr/>
-    <p>click to SELECT provinces!</p>
-    <p>click on the left side of the screen to DESELECT everything!</p>`,
-    whattodo: `<p class="fat">what to do?</p>
-    <p>ONLY click these after you selected the province that you want</p>
+    </div>`,
+    patchnotes:`<div id="deep">
+    <p class="fat">patch notes</p>
+    <p>-fixed infinite political power glitch</p>
+    <p>-cooler look (we are now green)</p>
+    <p>-added inspection</p>
+    <p>-added army</p>
+    </div>`,
+    whattodo: `<div id="deep">
+    <p class="fat">what to do?</p>
+    <p>only click these after you selected the province that you want</p>
+    </div>
     <button id="inspect">inspect</button>
-    <button id="conquerUI">conquer</button>`,
-    conquer: `<p class="fat">CONQUEST</p>
-    <p>each provinces CONQUERED need 2 political power!</p>
-    <p>you can only ANNEX @1@ provinces</p>
-    <button id="annex">ANNEX @hi this is a nice easter egg, please no hacking thanks@ province(s)</button>`,
-    comfirmdeselect: `<p class='fat'>are you sure</p>
-    <p>you can also deselect individual provinces by clicking on the same province</p>
-    <button id="deselect">YES, deselect everything.</button>
-    <button id="back">NO, go back!</button>`,
-    inspect: `<p>the province is owned by</p>
+    <button id="annex">annex @hi this is a nice easter egg, please no hacking thanks@ province(s)</button>`,
+    comfirmdeselect: `<div id="deep">
+    <p class='fat'>are you sure</p>
+    <p>you can also deselect provinces by clicking on the same province</p>
+    <p>this will take you to the main menu</p>
+    </div>
+    <button id="deselect">yes, deselect everything.</button>
+    <button id="back">no, go back!</button>`,
+    inspect: `<div id="deep">
+    <p>the province is owned by</p>
     <p class="fat">@1@</p>
-    <p>he is currently LEVEL @2@ with</p>
-    <p>@3@ POLITICAL POWER</p>`,
-    wait: `<p>WAIT FOR A MOMENT</p>`
+    <br/><br/>
+    <p>level: @2@</p>
+    <p>political power: @3@</p>
+    </div>
+    <button id="back">amazing!</button>`,
+    wait: `<p>wait for a moment</p>`
 }
 UIdiv.addEventListener('click', (event) => {
   const isButton = event.target.nodeName === 'BUTTON';
   if (!isButton) {
-    if (selected.length) {
+    if (selected.length > 1) {
         UIset("comfirmdeselect");
         return;
     }
     UIset("mainmenu");
+    selected = [];
     return;
   }
 
@@ -54,11 +67,11 @@ UIdiv.addEventListener('click', (event) => {
   switch (event.target.id) {
     case "annex":
         if (selected.length*2 <= user.pp) {
-            UIset("custom", [`successfully ANNEXED ${selected.length} provinces`]);
+            UIset("custom", [`successfully annexed ${selected.length} provinces`]);
             socket.emit("annex", selected);
             selected = [];
         } else {
-            UIset("custom", [`you need ${selected.length*2-user.pp} more POLITICAL POWER to do that`]);
+            UIset("custom", [`you need ${selected.length*2-user.pp} more political power to do that<br/>each provinces need 2 political power to conquer`]);
         }
         break;
     case "inspect":
@@ -71,26 +84,26 @@ UIdiv.addEventListener('click', (event) => {
         const tile = grid[sx][sy];
         selected = [];
         if (tile.ownerID == "0") {
-            UIset("custom", ["sir, it's EMPTY"]);
+            UIset("custom", ["sir, it's empty"]);
             break;
         }
         UIset("wait")
         socket.emit("inspect", {sx,sy});
         //UIset("inspect", ["your mom i think"])
         break;
-    case "conquerUI":
-        if (selected.length == 0) {
-            UIset("custom", ["you need to select 1 or more provinces"]);
-            break;
-        }
-        UIset("conquer", [`${Math.floor(user.pp/2)}`, `${selected.length}`]);
-        break;
     case "deselect":
         UIset("mainmenu");
         selected = [];
         break;
     case "back":
-        UIset("whattodo");
+        if (selected.length == 0) {
+            UIset("mainmenu");
+            break;
+        }
+        UIset("whattodo", [`${selected.length}`]);
+        break;
+    case "patchnotes":
+        UIset("patchnotes");
         break;
     default:
         console.log("Try changing the id in the switch statement too smh");
@@ -127,9 +140,9 @@ socket.on('userData', (syncData) => {
     document.getElementById('avatar').src = user.avatarUrl;
     document.getElementById('greeting').innerText = `hello, ${user.username}!`;
     //document.getElementById('discord-id').innerText = `Your Discord ID: ${user.id}`;
-    document.getElementById('discord-level').innerHTML = `your <span class="capitalized">LEVEL</span> is at a fascinating number ${user.level}!`;
-    document.getElementById('discord-rank').innerHTML = `you have the rank of <span class="capitalized">${ranks[rankId].toUpperCase()}</span>`;
-    document.getElementById('political-power').innerHTML = `you currently have ${user.pp} <span class="capitalized">POLITICAL POWER!</span>`;
+    document.getElementById('discord-level').innerHTML = `your level is ${user.level}!`;
+    document.getElementById('discord-rank').innerHTML = `your rank is ${ranks[rankId].toLowerCase()}`;
+    document.getElementById('political-power').innerHTML = `you currently have ${user.pp} political power!`;
 
     if (mobileCheck()) {
         document.body.style.overflow = "scroll";
@@ -192,19 +205,16 @@ function mouseClicked() {
         selected.push(index);
     }
 
-    //UIset("conquer", [`${selected.length}/${Math.floor(user.pp/2)}`]);
-    UIset("whattodo");
+    if (selected.length == 0) {
+        UIset("mainmenu");
+        return;
+    }
+    UIset("whattodo", [`${selected.length}`]);
 }
 
 function UIset(mode, fillIn = []) {
     console.log(mode)
-    let base = parseHTML(UImode[mode]).split("@")
-
-    if (mode == "custom") {
-        fillIn.forEach((v, i, a) => {
-            a[i] = v.replace(/[A-Z]/g, letter => `<span class="capitalized">${letter}</span>`);
-        });
-    }
+    let base = UImode[mode].split("@")
 
     if (base.length == 1) {
         UIdiv.innerHTML = UImode[mode];
@@ -215,15 +225,6 @@ function UIset(mode, fillIn = []) {
     }
 
     UIdiv.innerHTML = base.join("");
-
-    // add a class to identify texts with both capitalized and fat class for custom css
-    const elements = UIdiv.querySelectorAll('.capitalized');
-
-    elements.forEach(element => {
-        if (element.closest('.fat')) {
-            element.classList.add('combined');
-        }
-    });
 }
 
 function mobileCheck() {
@@ -246,26 +247,4 @@ function selectedColor(c) {
     colorMode(RGB, 255);
 
     return newColor;
-}
-
-// HOLY SHIT this is cancer
-function parseHTML(text) {
-    let base = text.split('<');
-    let base2 = [];
-
-    // split in < and > so i dont hit the tags
-    base.forEach((str) => {
-        str.split(">").forEach((wtf) => {
-            base2.push(wtf);
-        })
-    });
-
-    // adding "capitalized" class to uppercase letters
-    base = base2;
-    base2 = "";
-    for (let i = 2; i < base.length; i += 2) {
-        base2 += `<${base[i-1]}>${base[i].replace(/[A-Z]/g, letter => `<span class="capitalized">${letter}</span>`)}`;
-    }
-
-    return base2;
 }

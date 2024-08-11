@@ -39,6 +39,7 @@ const sessionMiddleware = session({
 app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.static(__dirname + '/public'));
 
 // Routes
 app.get('/', passport.authenticate('discord'));
@@ -52,42 +53,23 @@ app.get('/callback',
 );
 
 app.get('/profile', (req, res) => {
-    //if (!req.isAuthenticated() || !req.user) return res.redirect('/login');
-    if (!req.user) res.redirect('/');
+    if (!req.isAuthenticated() || !req.user) res.redirect('/');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+
 	mee6.getUserXp("522561390330904585", req.user.id).then(user => {
         getColorFromURL(user.avatarUrl)
             .then(color => {
                 console.log(`[COLOR] ${user.id} is rgb(${color.join(',')})`);
                 // Store the dominant color in your server or database
                 colors[user.id] = `rgb(${color.join(", ")})`;
-                user.pp = 999;
+                user.pp = userList[req.user.id] ? userList[req.user.id].pp : user.level;
                 userList[req.user.id] = user;
-                res.sendFile(path.join(__dirname, 'public', 'index.html'));
             })
             .catch(err => {
                 console.error('Error:', err);
             });
 	})
 });
-
-app.get('/get/:file', (req, res) => {
-    // i kinda overcomplicted this
-    switch (req.params.file) {
-        case "script.js": break;
-        case "style.css": break;
-        case "marioFont.ttf": break;
-        default: 
-            res.send("fuck you");
-            console.log(`[WARNING] gosh damn someone tryna grab something called ${req.params.file}`);
-            return;
-    }
-    res.sendFile(path.join(__dirname, 'public', req.params.file));
-});
-
-app.get('/developer.js', (req, res) => {
-    if (userList[req.user.id].id != "930064591961079849")
-    res.sendFile(path.join(__dirname, 'public', 'script.js'));
-})
 
 const userList = {};
 const colors = {
@@ -141,7 +123,7 @@ io.on('connection', (socket) => {
             if (grid[sx][sy].ownerID == user.id) return;
             grid[sx][sy].ownerID = user.id;
             user.pp -= 2;
-        })
+        });
         console.log(`[ANNEX] ${user.username} annexed ${selected.length} provinces`);
         io.emit('mapUpdate', {grid, colors});
         socket.emit('userData', {user, colors, grid});

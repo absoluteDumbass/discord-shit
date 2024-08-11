@@ -1,7 +1,7 @@
 @font-face { font-family: Mario; src: url('marioFont.ttf'); } 
 
 :root {
-    --fat-font-size: 2em;
+    --fat-font-size: 2.5em;
     --def-font-size: 1.2em;
     --border-size: 2px;
     --inverted-border-size: -1px;
@@ -18,20 +18,49 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 5px;
+    padding: 10px;
+    padding-top: 30px;
     text-align: center;
     width: 50vw;
     height: 72vh;
-    background: #8A8;
+    background: #8A8A;
+}
+
+#deep {
+    background: #FFF3;
+    display: inline-block;
+}
+
+#info {
+    width: 50vw;
+    background: #8A8A;
+    padding: 10px;
 }
 
 body {
-    overflow: hidden;
+    position: relative;
+    margin: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden; /* Ensure that the pseudo-element doesn't overflow */
     font-family: Mario;
-    background: #ACA;
+
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('background.webp');
+    background-size: cover;
+    background-position: center;
+    z-index: -1; /* Ensure it is behind the content */
 }
 
 p {
@@ -48,7 +77,7 @@ button {
     display: block;
     color: white;
     margin: 5px;
-    font-size: 1em;
+    font-size: var(--def-font-size);
     font-family: Mario;
     text-shadow: var(--inverted-border-size) var(--border-size) 0 var(--border-color),
                 var(--border-size) var(--border-size) 0 var(--border-color),
@@ -65,25 +94,12 @@ button {
     margin: 0;
 }
 
-.capitalized {
-    color: black;
-    text-shadow: 
-    1px 1px 0 #FFF,
-    -1px 1px 0 #FFF,
-    1px -1px 0 #FFF,
-    -1px -1px 0 #FFF;
-}
-
-.combined {
-    text-shadow: 
-    2px 2px 0 #FFF,
-    -2px 2px 0 #FFF,
-    2px -2px 0 #FFF,
-    -2px -2px 0 #FFF;
+.small {
+    font-size: 0.8em
 }
 
 #avatar {
     position: absolute;
     left: 40vw;
-    border: 5px solid #8A8;
+    border: 8px solid #8A8;
 }
