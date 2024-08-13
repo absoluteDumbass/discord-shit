@@ -235,7 +235,7 @@ function UIset(mode, fillIn = []) {
         base[1+i*2] = fillIn[i];
     }
 
-    UIdiv.innerHTML = base.join("") + `<img id="frog" alt="frog" src="frog.png">`;
+    UIdiv.innerHTML = base.join("") + `<img id="frog" alt="frog" src="/static/frog.png">`;
 }
 
 function mobileCheck() {

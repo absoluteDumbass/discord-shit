@@ -39,7 +39,7 @@ const sessionMiddleware = session({
 app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(__dirname + '/public'));
+app.use("/static", express.static(__dirname + '/public'));
 
 // Routes
 app.get('/', passport.authenticate('discord'));
@@ -63,7 +63,7 @@ app.get('/profile', (req, res) => {
                 colors[user.id] = `rgb(${color.join(", ")})`;
                 user.pp = userList[req.user.id] ? userList[req.user.id].pp : user.level;
                 userList[req.user.id] = user;
-                res.sendFile(path.join(__dirname, 'troublemaker', 'index.html'));
+                res.sendFile(path.join(__dirname, 'public', 'index.html'));
             })
             .catch(err => {
                 console.error('Error:', err);
@@ -105,8 +105,7 @@ io.on('connection', (socket) => {
     socket.on('requestUserData', () => {
         const user = userList[socket.request.user.id];
         if (!user) {
-            console.log("someone was bugged idk who")
-            console.log(userList)
+            console.log("someone was bugged and apparently his id is " + socket.request.user.id)
             socket.emit("loginAgain");
             return;
         }
@@ -143,11 +142,12 @@ io.on('connection', (socket) => {
     });
 });
 
+// For non-technical people who don't understand what this is: 
+// No, this is not an IP logger. I'm trying to know where the server is hosted in.
 function serverIP() {
-    const interfaces = os.networkInterfaces();
+    const interfaces = os.networkInterfaces(); // this only gets the list of IPs from my own OS
     for (const name of Object.keys(interfaces)) {
         for (const net of interfaces[name]) {
-            // Skip over non-IPv4 addresses and internal (127.0.0.1) addresses
             if (net.family === 'IPv4' && !net.internal) {
                 return net.address;
             }

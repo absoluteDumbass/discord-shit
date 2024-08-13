@@ -23,12 +23,14 @@
     text-align: center;
     width: 50vw;
     height: 60vh;
-    background: #8A8A;
+    background: #8A85;
+    border: 0.3vw solid #9892;
 }
 
 #info {
     width: 50vw;
-    background: #8A8A;
+    background: #8A85;
+    border: 0.3vw solid #9892;
     padding: 10px;
 }
 
