@@ -24,6 +24,7 @@ const UImode = {
     </div>
     </div>`,
     patchnotes:`<p class="fat">patch notes</p>
+    <p>we are still in alpha btw</p>
     <div class="deep small">
     <p>-fixed infinite political power glitch</p>
     <p>-increased the map by 625%</p>
@@ -153,11 +154,13 @@ socket.on('userData', (syncData) => {
 
     if (!loaded) UIset("mainmenu");
     loaded = true;
+    draw();
 });
 
 socket.on('mapUpdate', (data) => {
     grid = data.grid;
     colors = data.colors;
+    draw();
 })
 
 socket.on('showInspect', (a) => {
@@ -175,13 +178,13 @@ function windowResized() {
     return;
 }
 function draw() {
-    frameRate(1)
     background("#666666");
     fill(255)
     text("Pretty sure this is made for Landscape mode,", windowWidth, windowHeight/2-30);
     text("please turn your phone to sideway.", windowWidth, windowHeight/2);
     if (windowWidth < windowHeight) return;
     if (!loaded) return;
+    frameRate(0)
     let s = windowHeight/50;
     stroke('rgba(0, 0, 0, 0.25)');
     for (let x = 0; x < 50; x++) {
