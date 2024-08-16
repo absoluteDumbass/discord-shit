@@ -6,12 +6,25 @@ let grid = [];
 let selected = [];
 let colors = {};
 
+const randomFacts = [
+    `contrary to popular belief, froggie hates eating flys`,
+    `froggie says that flys tastes like literal shit`,
+    `shimmy shimmy ey shimmy ey shimmy ahh`,
+    `artilery is actually more cost effective for pure damage`,
+    `all artilery and engineers will die without infantry`,
+    `the frog is only there to make the page feel less empty`,
+    `the map is this big primarily because of @ercan, @eyequ, and @airod`,
+    `@ercan, @eyequ, and @airod if you guys are reading this, go touch grass`,
+    `huge thanks to game roomians, fuck you generalians`,
+    `venus is one letter away from uh the word genus`
+]
+
 // the UI im talking about is in the bottom left side of the screen
 const UImode = {
     custom: `<p>@1@</p>
     <button id="back">okay</button>`, // use custom for short texts with no special buttons
     mainmenu: `<p class="fat">oveview</p>
-    <button>army</button>
+    <button id="army">army</button>
     <button id="patchnotes">patch notes</button>
     <br/><br/>
     <div class="deep">
@@ -24,14 +37,13 @@ const UImode = {
     </div>
     </div>`,
     patchnotes:`<p class="fat">patch notes</p>
-    <p>we are still in alpha btw</p>
+    <p>(we are still in beta btw)</p>
     <div class="deep small">
-    <p>-fixed infinite political power glitch</p>
-    <p>-increased the map by 625%</p>
-    <p>-conquering cost reduced from 2 to 1</p>
-    <p>-cooler look (say hi to froggie)</p>
-    <p>-added inspection</p>
-    <p>-added army</p>
+    <p>-level up! we are now in beta stage</p>
+    <p>-generally added army and combat</p>
+    <p>-you can now train your troops</p>
+    <p>-added the first unit types: infantry, artilery, engineer</p>
+    <p>-your political power now finally updates every day at 23:59:59 UTC</p>
     </div>`,
     whattodo: `<div class="deep">
     <p class="fat">what to do?</p>
@@ -54,6 +66,12 @@ const UImode = {
     <p>political power: @3@</p>
     </div>
     <button id="back">amazing!</button>`,
+    army: `<p class="fat">your army consists of</p>
+    <div class="deep">
+    <p>0 infantry</p>
+    <p>0 artilery</p>
+    <p>0 combat engineers</p>
+    </div>`,
     wait: `<p>wait for a moment</p>`
 }
 UIdiv.addEventListener('click', (event) => {
@@ -64,7 +82,7 @@ UIdiv.addEventListener('click', (event) => {
         return;
     }
     UIset("mainmenu");
-    selected = [];
+    clearSelection();
     return;
   }
 
@@ -74,7 +92,7 @@ UIdiv.addEventListener('click', (event) => {
         if (selected.length <= user.pp) {
             UIset("custom", [`successfully annexed ${selected.length} provinces`]);
             socket.emit("annex", selected);
-            selected = [];
+            clearSelection();
         } else {
             UIset("custom", [`you need ${selected.length-user.pp} more political power to do that<br/>each provinces need 1 political power to conquer`]);
         }
@@ -87,7 +105,7 @@ UIdiv.addEventListener('click', (event) => {
         const sx = Math.floor(selected[0]/50);
         const sy = selected[0]%50;
         const tile = grid[sx][sy];
-        selected = [];
+        clearSelection();
         if (tile.ownerID == "0") {
             UIset("custom", ["sir, it's empty"]);
             break;
@@ -98,7 +116,7 @@ UIdiv.addEventListener('click', (event) => {
         break;
     case "deselect":
         UIset("mainmenu");
-        selected = [];
+        clearSelection();
         break;
     case "back":
         if (selected.length == 0) {
@@ -109,6 +127,9 @@ UIdiv.addEventListener('click', (event) => {
         break;
     case "patchnotes":
         UIset("patchnotes");
+        break;
+    case "army":
+        UIset("army");
         break;
     default:
         console.log("Try changing the id in the switch statement too smh");
@@ -261,4 +282,10 @@ function selectedColor(c) {
     colorMode(RGB, 255);
 
     return newColor;
+}
+
+function clearSelection() {
+    selected = [];
+    draw();
+    return; 
 }
