@@ -175,7 +175,8 @@ io.on('connection', (socket) => {
     socket.on('annex', (selected) => {
         if (selected.length > user.pp) return;
         const target = grid[(Math.floor(selected[0]/50))][(selected[0]%50)].ownerID;
-        console.log(`[ATTACK] ${user.username} is attacking ${target} for ${selected.length} provinces!`);
+        if (target == user.id) return;
+        
         let mul = false;
         selected.forEach((index) => {
             const sx = Math.floor(index/50);
@@ -193,6 +194,7 @@ io.on('connection', (socket) => {
             user.pp -= selected.length;
         } else {
             // battle logic!
+            console.log(`[ATTACK] ${user.username} is attacking ${target} for ${selected.length} provinces!`);
             const atk = {
                 atk: 0,
                 def: 0
