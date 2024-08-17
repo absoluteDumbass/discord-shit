@@ -33,14 +33,15 @@ If something is marked with an asterisk (`*`), then it means that it can be diff
 The army is split into 3 units: `Infantry`, `Artilery`, `Engineer`
 
 - Every unit takes a day to train, you may spend 2x more to make it instant.
+- If you reach negative income, all of your army will disband
 
 | Table of content | Infantry | Artilery | Engineer |
 | - | :-: | :-: | :-: | 
 | Cost (per day) | 0.1* | 0.2 | 0.1
-| Training cost  | 1    | 5 | 3
+| Training cost  | 1    | 2 | 2
 | Siege progress | -    | 3 | 1
-| Attack power   | 1    | 4 | -
-| Defense power  | 1    | - | 3
+| Attack         | 1    | 5 | -
+| Defense        | 1    | - | 3
 
 - Siege progress is the amount of damage this type of unit does to a fort (which will be added later)
 - In a battle, the Attack power will decide whether you win or lose. Defense power simply minimises your overall loss and enemy land gain.
@@ -54,10 +55,11 @@ The infantry is the primary unit for everything but sieging. Even then, they are
 - Every 1 infantry can occupy 1 province
 
 ### Artilerry
-Artilery guns are massive guns. if you purely want more firepower, artileries are 2 times more efficient to produce. They...
+Artilery guns are massive guns. if you have a surplus and want more offensive power, artilery is the perfect unit. They...
 - Are expensive to produce and maintain but overall more cost-to-damage efficient than infantry
 - Does not passively defend your territory
 - Excels in sieges
+- Are glass cannons
 - **Wll all die if the infantry dies**
 
 ### Engineer
@@ -72,9 +74,9 @@ When using `inspect`, it will show an estimate on how strong that person is.
 It's unreliable and calculated **purely based on their level**, but it does give you an idea on how strong a nation can be.
 
 Equations used are:
-- Infantry: `province count + (level / 15)`
-- Artilery: `level / 50`
-- Engineer: `level / 20`
+- Infantry: `province count + (level / 2)`
+- Artilery: `level / 30`
+- Engineer: `level / 10`
 - Invasion odds: `their level/your level`
   - Too easy: `<10%`
   - One sided: `10-39%`

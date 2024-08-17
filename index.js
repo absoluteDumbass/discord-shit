@@ -9,6 +9,7 @@ const mee6 = require("mee6-levels-api");
 const path = require('path');
 const { getColorFromURL } = require("color-thief-node");
 const sql = require('connect-sqlite3')(session);
+const cfg = require("./config.json")
 require("dotenv").config();
 
 const app = express();
@@ -42,7 +43,36 @@ app.use(passport.session());
 app.use("/static", express.static(__dirname + '/public'));
 
 // Routes
-app.get('/', passport.authenticate('discord'));
+app.get('/', (req, res) => {
+    // Check if this is an actual page visit (e.g., by checking a query parameter, user-agent, etc.)
+    const isBot = req.headers['user-agent'].includes('bot'); // Example for bots/crawlers
+    const isSharedLink = req.query.shared === 'true'; // Example query parameter for shared links
+
+    if (isBot || isSharedLink) {
+        // Serve the root page with custom meta tags
+        res.send(`
+            <html>
+                <head>
+                    <title>poo poo</title>
+                    <meta name="title" content="${cfg.meta.title}">
+                    <meta name="description" content="${cfg.meta.description}">
+                    <meta name="keywords" content="${cfg.meta.tags}">
+                    <meta name="robots" content="index, follow">
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                    <meta name="language" content="English">
+                </head>
+                <body>
+                    <h1>go away scrapers!</h1>
+                </body>
+            </html>
+        `);
+    } else {
+        // Redirect to login for other visits
+        res.redirect('/login');
+    }
+});
+
+app.get('/login', passport.authenticate('discord'));
 
 app.get('/callback',
     passport.authenticate('discord', { failureRedirect: '/' }),
@@ -64,7 +94,7 @@ app.get('/profile', (req, res) => {
                 if (userList[req.user.id]) {
                     userList[req.user.id].level = user.level
                     userList[req.user.id].username = user.username
-                    userList[req.user.id].avatarUrl = user.avaterUrl
+                    userList[req.user.id].avatarUrl = user.avatarUrl
                     user = userList[req.user.id];
                 } else {
                     // initialization
@@ -106,17 +136,29 @@ io.use(wrap(sessionMiddleware));
 io.use(wrap(passport.initialize()));
 io.use(wrap(passport.session()));
 io.use((socket, next) => {
-    if (socket.request.user) {
+    if (socket.request.user || !userList[socket.request.user.id]) {
         next();
     } else {
         next(new Error("unauthorized"));
     }
 });
 
-io.on('connection', (socket) => {
+// Error-handling middleware
+app.use((err, req, res, next) => {
+    if (err.message === 'Unauthorized') {
+        // Redirect to login page
+        return res.redirect('/login');
+    }
 
+    // For other errors, send a generic error response
+    res.status(500).json({
+        message: err.message || 'Internal Server Error'
+    });
+});
+
+io.on('connection', (socket) => {
+    const user = userList[socket.request.user.id];
     socket.on('requestUserData', () => {
-        const user = userList[socket.request.user.id];
         if (!user) {
             console.log("someone was bugged and apparently his id is " + socket.request.user.id)
             socket.emit("loginAgain");
@@ -126,8 +168,11 @@ io.on('connection', (socket) => {
         socket.emit('userData', {user, colors, grid});
     });
 
+    socket.on("quickData", () => {
+        socket.emit("quickData", user.pp)
+    })
+
     socket.on('annex', (selected) => {
-        const user = userList[socket.request.user.id];
         if (selected.length > user.pp) return;
         selected.forEach((index) => {
             const sx = Math.floor(index/50);
@@ -145,9 +190,23 @@ io.on('connection', (socket) => {
     socket.on('inspect', (data) => {
         const { sx, sy } = data;
         const tile = grid[sx][sy];
-        const user = userList[tile.ownerID]
+        const target = userList[tile.ownerID]
 
-        socket.emit('showInspect', {tile, user});
+        socket.emit('showInspect', target);
+    });
+
+    socket.on("army", () => {
+        socket.emit("showArmy", user.army);
+    })
+
+    socket.on('recruit', (type) => {
+        const price = cfg[type].traincost;
+        if (user.pp < price) {
+            return;
+        }
+        user.pp -= price;
+        user.army[type]++;
+        socket.emit("showArmy", user.army);
     })
 
     socket.on('disconnect', () => {

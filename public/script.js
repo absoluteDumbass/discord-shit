@@ -66,16 +66,21 @@ const UImode = {
     <p>political power: @3@</p>
     <br/>
     <div class="small">
-    <p>an invasion would be @4@</p>
-    <p>as they are @5@% of your level</p>
+    <p>their army is estimated to be</p>
+    <p>@4@ infantry</p>
+    <p>@5@ artilery</p>
+    <p>@6@ engineer</p>
+    <br/>
+    <p>invading them would be @7@</p>
+    <p>as they are @8@% of your level</p>
     </div>
     </div>
     <button id="back">amazing!</button>`,
     army: `<p class="fat">your army consists of</p>
     <div class="deep">
-    <p>0 infantry</p>
-    <p>0 artilery</p>
-    <p>0 combat engineers</p>
+    <p>@1@ infantry<button id="recruitI">recruit</button></p>
+    <p>@2@ artilery<button id="recruitA">recruit</button></p>
+    <p>@3@ engineers<button id="recruitE">recruit</button></p>
     </div>`,
     wait: `<p>wait for a moment</p>`
 }
@@ -134,7 +139,11 @@ UIdiv.addEventListener('click', (event) => {
         UIset("patchnotes");
         break;
     case "army":
-        UIset("army");
+        UIset("wait");
+        socket.emit("army");
+        break;
+    case "recruitI":
+        socket.emit("recruit", "infantry");
         break;
     default:
         console.log("Try changing the id in the switch statement too smh");
@@ -183,6 +192,10 @@ socket.on('userData', (syncData) => {
     draw();
 });
 
+socket.on("quickData", (a) => {
+    document.getElementById('political-power').innerHTML = `you currently have ${a} political power!`;
+})
+
 socket.on('mapUpdate', (data) => {
     grid = data.grid;
     colors = data.colors;
@@ -190,7 +203,12 @@ socket.on('mapUpdate', (data) => {
 })
 
 socket.on('showInspect', (a) => {
-    const compare = Math.round(a.user.level/user.level*100);
+    const est = [
+        Math.round(user.level / 2), // infantry
+        Math.round(user.level / 30),
+        Math.round(user.level / 10)
+    ]
+    const compare = Math.round(a.level/user.level*100);
     const ranges = [
         { min: 0, max: 9, label: 'too easy' },
         { min: 10, max: 39, label: 'one sided' },
@@ -200,11 +218,12 @@ socket.on('showInspect', (a) => {
       ];
       
     const difficulty = ranges.find(range => compare >= range.min && compare <= range.max).label;
-    UIset('inspect', [a.user.username, a.user.level, a.user.pp, difficulty, compare])
+    UIset('inspect', [a.username, a.level, a.pp, est[0], est[1], est[2], difficulty, compare])
 })
 
 socket.on('showArmy', (a) => {
-    UIset('army', [])
+    socket.emit("quickData");
+    UIset('army', [a.infantry, a.artilery, a.engineer]);
 })
 
 function setup() {

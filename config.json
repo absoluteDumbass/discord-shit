@@ -1,0 +1,25 @@
+{
+    "meta": {
+        "title": "Rankist's Heaven",
+        "description": "THIS WEBSITE IS IN NO WAY SHAPE OR FORM AFFILIATED WITH WORLDBOX OR MEE6.",
+        "tags": "map, map war, map wars, wars, conquest, expansion, worldbox, worldbox update, discord"
+    },
+    "infantry": {
+        "maintenence": 0.1,
+        "traincost": 1,
+        "attack": 1,
+        "defense": 1
+    },
+    "artilery": {
+        "maintenence": 0.2,
+        "traincost": 2,
+        "attack": 5,
+        "defense": 0
+    },
+    "engineer": {
+        "maintenence": 0.1,
+        "traincost": 2,
+        "attack": 0,
+        "defense": 3
+    }
+}
