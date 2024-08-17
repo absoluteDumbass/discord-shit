@@ -21,6 +21,7 @@ Hey, just a heads up that this website is still in the beta stage. I'm mainly fo
 - Province development
 - Better mobile support
 - Transfering land
+- Map modes for data visualization
 
 --------------------------
 # Wiki
@@ -35,16 +36,14 @@ The army is split into 3 units: `Infantry`, `Artilery`, `Engineer`
 
 | Table of content | Infantry | Artilery | Engineer |
 | - | :-: | :-: | :-: | 
-| Cost (per day) | 0.1* | 0.3 | 0.1
+| Cost (per day) | 0.1* | 0.2 | 0.1
 | Training cost  | 1    | 5 | 3
-| Deploying cost | -    | 1 | 1
 | Siege progress | -    | 3 | 1
-| Attack power   | 1    | 5 | -
+| Attack power   | 1    | 4 | -
 | Defense power  | 1    | - | 3
 
-- Deploying cost is the amount of political power consumed every time you send them on a mission
 - Siege progress is the amount of damage this type of unit does to a fort (which will be added later)
-- In a battle, the Attack power will decide whether you win or lose. Defense power simply minimises your overall loss.
+- In a battle, the Attack power will decide whether you win or lose. Defense power simply minimises your overall loss and enemy land gain.
 
 ### Infantry
 The infantry is the primary unit for everything but sieging. Even then, they are essential to defend the units that are sieging. They...

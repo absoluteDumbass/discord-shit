@@ -61,7 +61,20 @@ app.get('/profile', (req, res) => {
                 console.log(`[COLOR] ${user.id} is rgb(${color.join(',')})`);
                 // Store the dominant color in your server or database
                 colors[user.id] = `rgb(${color.join(", ")})`;
-                user.pp = userList[req.user.id] ? userList[req.user.id].pp : user.level;
+                if (userList[req.user.id]) {
+                    userList[req.user.id].level = user.level
+                    userList[req.user.id].username = user.username
+                    userList[req.user.id].avatarUrl = user.avaterUrl
+                    user = userList[req.user.id];
+                } else {
+                    // initialization
+                    user.pp = user.level;
+                    user.army = {
+                        infantry: 0,
+                        artilery: 0,
+                        engineer: 0
+                    }
+                }
                 userList[req.user.id] = user;
                 res.sendFile(path.join(__dirname, 'public', 'index.html'));
             })

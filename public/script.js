@@ -37,7 +37,7 @@ const UImode = {
     </div>
     </div>`,
     patchnotes:`<p class="fat">patch notes</p>
-    <p>(we are still in beta btw)</p>
+    <p>unnumbered beta version</p>
     <div class="deep small">
     <p>-level up! we are now in beta stage</p>
     <p>-generally added army and combat</p>
@@ -65,8 +65,10 @@ const UImode = {
     <p>level: @2@</p>
     <p>political power: @3@</p>
     <br/>
+    <div class="small">
     <p>an invasion would be @4@</p>
     <p>as they are @5@% of your level</p>
+    </div>
     </div>
     <button id="back">amazing!</button>`,
     army: `<p class="fat">your army consists of</p>

@@ -75,7 +75,7 @@ body::before {
 
 p {
     color: white;
-    margin: 8px;
+    margin: 0.5vh;
     font-size: var(--def-font-size);
     text-shadow: var(--inverted-border-size) var(--border-size) 0 var(--border-color),
                 var(--border-size) var(--border-size) 0 var(--border-color),
@@ -119,4 +119,5 @@ button {
 #avatar {
     position: absolute;
     left: 40vw;
+    height: 7em;
 }
