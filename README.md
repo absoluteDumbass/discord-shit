@@ -49,7 +49,6 @@ The army is split into 3 units: `Infantry`, `Artilery`, `Engineer`
 ### Infantry
 The infantry is the primary unit for everything but sieging. Even then, they are essential to defend the units that are sieging. They...
 - Absorbs all the damage dealt by the opponent
-- Passively defends your territory
 - Passively raise an infantry count as much as your province count (+1 per day)
 - Cost nothing to maintain if equal to or smaller than your province count
 - Every 1 infantry can occupy 1 province
@@ -57,14 +56,12 @@ The infantry is the primary unit for everything but sieging. Even then, they are
 ### Artilerry
 Artilery guns are massive guns. if you have a surplus and want more offensive power, artilery is the perfect unit. They...
 - Are expensive to produce and maintain but overall more cost-to-damage efficient than infantry
-- Does not passively defend your territory
 - Excels in sieges
 - Are glass cannons
 - **Wll all die if the infantry dies**
 
 ### Engineer
 The combat engineers helps setting up barriers and reduce damage taken from battles. They...
-- Passively defends your territory
 - Excels in defense
 - Will aid in sieges
 - **Will all die if the infantry dies**

@@ -100,7 +100,7 @@ UIdiv.addEventListener('click', (event) => {
   switch (event.target.id) {
     case "annex":
         if (selected.length <= user.pp) {
-            UIset("custom", [`successfully annexed ${selected.length} provinces`]);
+            UIset("wait");
             socket.emit("annex", selected);
             clearSelection();
         } else {
@@ -194,6 +194,11 @@ socket.on('userData', (syncData) => {
 
 socket.on("quickData", (a) => {
     document.getElementById('political-power').innerHTML = `you currently have ${a} political power!`;
+})
+
+socket.on("message", (wordsOfWisdom) => {
+    console.log(wordsOfWisdom);
+    UIset("custom", [wordsOfWisdom]);
 })
 
 socket.on('mapUpdate', (data) => {

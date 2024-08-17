@@ -174,15 +174,68 @@ io.on('connection', (socket) => {
 
     socket.on('annex', (selected) => {
         if (selected.length > user.pp) return;
+        const target = grid[(Math.floor(selected[0]/50))][(selected[0]%50)].ownerID;
+        console.log(`[ATTACK] ${user.username} is attacking ${target} for ${selected.length} provinces!`);
+        let mul = false;
         selected.forEach((index) => {
             const sx = Math.floor(index/50);
             const sy = index%50;
 
-            if (grid[sx][sy].ownerID == user.id) return;
-            grid[sx][sy].ownerID = user.id;
-            user.pp--;
-        });
-        console.log(`[ANNEX] ${user.username} annexed ${selected.length} provinces`);
+            if (!(grid[sx][sy].ownerID == target))  mul = true;
+        })
+
+        if (mul) {
+            socket.emit("message", "it would be nice if you only attack 1 person at a time")
+            return;
+        }
+
+        if (target === "0") {
+            user.pp -= selected.length;
+        } else {
+            // battle logic!
+            const atk = {
+                atk: 0,
+                def: 0
+            }
+            const def = {
+                atk: 0,
+                def: 0
+            }
+            let temp = userList[target].army;
+            atk.atk += temp.infantry * cfg.infantry.attack;
+            atk.atk += temp.artilery * cfg.artilery.attack;
+
+            atk.def += temp.infantry * cfg.infantry.defense;
+            atk.def += temp.engineer * cfg.artilery.defense;
+
+            temp = user.army
+            def.atk += temp.infantry * cfg.infantry.attack;
+            def.atk += temp.artilery * cfg.artilery.attack;
+
+            def.def += temp.infantry * cfg.infantry.defense;
+            def.def += temp.engineer * cfg.artilery.defense;
+            if (atk.atk <= def.atk) {
+                const aloss = Math.max((def.atk-atk.def)/2, 5);
+                const dloss = Math.max((atk.atk-def.def)/2, 5);
+
+                user.pp--;
+                socket.emit("message", `your attack has failed. you suffered ${dloss} while dealing ${aloss}.`);
+            } else {
+                const aloss = Math.max((def.atk-atk.def)/2, 5);
+                const dloss = Math.max((atk.atk-def.def), 5);
+
+                selected.forEach((index) => {
+                    const sx = Math.floor(index/50);
+                    const sy = index%50;
+        
+                    grid[sx][sy].ownerID = user.id;
+                    user.pp--;
+                });
+
+                socket.emit("message", `success! you suffered ${dloss} while dealing ${aloss}.`);
+            }
+        }
+
         io.emit('mapUpdate', {grid, colors});
         socket.emit('userData', {user, colors, grid});
     })
