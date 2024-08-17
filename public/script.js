@@ -99,7 +99,12 @@ UIdiv.addEventListener('click', (event) => {
   // button interections, event.target.id is the id of the button clicked
   switch (event.target.id) {
     case "annex":
-        if (selected.length <= user.pp) {
+        if (grid[(Math.floor(selected[0]/50))][(selected[0]%50)].ownerID == user.id) {
+            UIset("custom", ["you can't attack yourself!"])
+            break;
+        }
+        if (selected.length < user.pp) {
+            console.log(true)
             UIset("wait");
             socket.emit("annex", selected);
             clearSelection();

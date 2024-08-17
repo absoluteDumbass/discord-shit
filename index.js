@@ -88,7 +88,6 @@ app.get('/profile', (req, res) => {
 	mee6.getUserXp("522561390330904585", req.user.id).then(user => {
         getColorFromURL(user.avatarUrl)
             .then(color => {
-                console.log(`[COLOR] ${user.id} is rgb(${color.join(',')})`);
                 // Store the dominant color in your server or database
                 colors[user.id] = `rgb(${color.join(", ")})`;
                 if (userList[req.user.id]) {
@@ -98,7 +97,7 @@ app.get('/profile', (req, res) => {
                     user = userList[req.user.id];
                 } else {
                     // initialization
-                    user.pp = user.level;
+                    user.pp = user.level*5;
                     user.army = {
                         infantry: 0,
                         artilery: 0,
@@ -192,6 +191,13 @@ io.on('connection', (socket) => {
 
         if (target === "0") {
             user.pp -= selected.length;
+            selected.forEach((index) => {
+                const sx = Math.floor(index/50);
+                const sy = index%50;
+    
+                grid[sx][sy].ownerID = user.id;
+            });
+            socket.emit("message", `success! you annexed ${selected.length} province(s)!`);
         } else {
             // battle logic!
             console.log(`[ATTACK] ${user.username} is attacking ${target} for ${selected.length} provinces!`);
