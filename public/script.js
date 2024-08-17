@@ -61,9 +61,12 @@ const UImode = {
     inspect: `<div class="deep">
     <p>the province is owned by</p>
     <p class="fat">@1@</p>
-    <br/><br/>
+    <br/>
     <p>level: @2@</p>
     <p>political power: @3@</p>
+    <br/>
+    <p>an invasion would be @4@</p>
+    <p>as they are @5@% of your level</p>
     </div>
     <button id="back">amazing!</button>`,
     army: `<p class="fat">your army consists of</p>
@@ -185,7 +188,21 @@ socket.on('mapUpdate', (data) => {
 })
 
 socket.on('showInspect', (a) => {
-    UIset('inspect', [a.user.username, a.user.level, a.user.pp])
+    const compare = Math.round(a.user.level/user.level*100);
+    const ranges = [
+        { min: 0, max: 9, label: 'too easy' },
+        { min: 10, max: 39, label: 'one sided' },
+        { min: 40, max: 89, label: 'costly' },
+        { min: 90, max: 110, label: 'insane' },
+        { min: 111, max: Infinity, label: 'suicidal' }
+      ];
+      
+    const difficulty = ranges.find(range => compare >= range.min && compare <= range.max).label;
+    UIset('inspect', [a.user.username, a.user.level, a.user.pp, difficulty, compare])
+})
+
+socket.on('showArmy', (a) => {
+    UIset('army', [])
 })
 
 function setup() {

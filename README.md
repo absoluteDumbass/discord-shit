@@ -77,9 +77,8 @@ Equations used are:
 - Artilery: `level / 50`
 - Engineer: `level / 20`
 - Invasion odds: `their level/your level`
-  - Some rocks: `<10%`
-  - Speedbump: `10-39%`
-  - Roadblock: `40-69%`
-  - Costly: `70-89%`
-  - Equal: `90-109%`
-  - Superior: `>110%`
+  - Too easy: `<10%`
+  - One sided: `10-39%`
+  - Costly: `40-89%`
+  - Insane: `90-110%`
+  - Suicidal: `>111%`
