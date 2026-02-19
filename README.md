@@ -1,8 +1,8 @@
 # ABANDONED
 this project is abandoned. Here are extra information:
-node-tar is Vulnerable to Arbitrary File Overwrite and Symlink Poisoning via Insufficient Path Sanitization
-Race Condition in node-tar Path Reservations via Unicode Ligature Collisions on macOS APFS
-node-tar Vulnerable to Arbitrary File Creation/Overwrite via Hardlink Path Traversal
+- node-tar is Vulnerable to Arbitrary File Overwrite and Symlink Poisoning via Insufficient Path Sanitization
+- Race Condition in node-tar Path Reservations via Unicode Ligature Collisions on macOS APFS
+- node-tar Vulnerable to Arbitrary File Creation/Overwrite via Hardlink Path Traversal
 
 i am not fixing all that
 
